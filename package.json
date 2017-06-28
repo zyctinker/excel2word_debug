@@ -1,0 +1,17 @@
+{
+  "name": "excel2word_forta",
+  "version": "0.0.1",
+  "description": "try to convert work data from excel to word",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "zyctinker",
+  "license": "MIT",
+  "dependencies": {
+    "docxtemplater": "^3.1.3",
+    "excel-to-json": "^1.0.0",
+    "jszip": "^2.6.1",
+    "node-excel-to-json": "0.0.3"
+  }
+}
