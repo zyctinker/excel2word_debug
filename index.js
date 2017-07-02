@@ -6,8 +6,7 @@ var path = require('path');
 
 var content = fs.readFileSync(path.resolve(__dirname, 'input.docx'), 'binary');
 var zip = new JSZip(content);
-var doc = new Docxtemplater();
-doc.loadZip(zip);
+
 excel2Json('../../../sample.xlsx', {
     'convert_all_sheet': false,
     'return_type': 'Object',
@@ -25,7 +24,11 @@ excel2Json('../../../sample.xlsx', {
             //console.log(output[singleRecord]);
             nowPerson.data.record.push(output[singleRecord]);
         }
-        else{
+        else{//output this person's data
+        	content = fs.readFileSync(path.resolve(__dirname, 'input.docx'), 'binary');
+			zip = new JSZip(content);
+        	doc = new Docxtemplater();
+            doc.loadZip(zip);
             doc.setData(nowPerson.data);
             try {
                 doc.render();
@@ -44,11 +47,20 @@ excel2Json('../../../sample.xlsx', {
             buf[i] = doc.getZip()
                 .generate({type: 'nodebuffer'});
             fs.writeFileSync(path.resolve(__dirname, nowPerson.name+'.docx'), buf[i++]);
+            doc = null;
+            content = null;
+            zip = null;
             nowPerson.name = output[singleRecord].name;
             nowPerson.data.record = [];
             nowPerson.data.record.push(output[singleRecord]);
+            
         }
     }
+    //output the last one's data
+    content = fs.readFileSync(path.resolve(__dirname, 'input.docx'), 'binary');
+	zip = new JSZip(content);
+    doc = new Docxtemplater();
+    doc.loadZip(zip);
     doc.setData(nowPerson.data);
     try {
         doc.render()
