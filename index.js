@@ -13,21 +13,19 @@ excel2Json('../../../sample.xlsx', {
     'return_type': 'Object',
     'sheetName': 'phonenumber'
 }, function(err, output) {
-    //输出单人
     var i = 0;
     var buf = new Array();
     var nowPerson = {
-     name : output[1].author,
+     name : output[0].name,
      data : {"record": []}
      }
     for(var singleRecord in output) {
-        console.log(output[singleRecord].author);
-        if((output[singleRecord].author===nowPerson.name)){//同一个人放到同一个数组里
+        //console.log(output[singleRecord].name);
+        if((output[singleRecord].name===nowPerson.name)){
             //console.log(output[singleRecord]);
             nowPerson.data.record.push(output[singleRecord]);
         }
         else{
-            console.log(nowPerson.data);
             doc.setData(nowPerson.data);
             try {
                 doc.render();
@@ -43,10 +41,10 @@ excel2Json('../../../sample.xlsx', {
                 // The error thrown here contains additional information when logged with JSON.stringify (it contains a property object).
                 throw error;
             }
-            buf = doc.getZip()
+            buf[i] = doc.getZip()
                 .generate({type: 'nodebuffer'});
-            fs.writeFileSync(path.resolve(__dirname, nowPerson.name+'.docx'), buf);
-            nowPerson.name = output[singleRecord].author;
+            fs.writeFileSync(path.resolve(__dirname, nowPerson.name+'.docx'), buf[i++]);
+            nowPerson.name = output[singleRecord].name;
             nowPerson.data.record = [];
             nowPerson.data.record.push(output[singleRecord]);
         }
@@ -66,8 +64,8 @@ excel2Json('../../../sample.xlsx', {
         // The error thrown here contains additional information when logged with JSON.stringify (it contains a property object).
         throw error;
     }
-    var buf = doc.getZip()
+    buf[i] = doc.getZip()
         .generate({type: 'nodebuffer'});
-    fs.writeFileSync(path.resolve(__dirname, nowPerson.name+'.docx'), buf);
+    fs.writeFileSync(path.resolve(__dirname, nowPerson.name+'.docx'), buf[i++]);
 
 });
